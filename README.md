@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Build in Netlify https://schedule-patient.netlify.app/
+
 ## Available Scripts
 
 In the project directory, you can run:
