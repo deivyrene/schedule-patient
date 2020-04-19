@@ -1,25 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, useState, useEffect } from 'react';
+import Form from './components/form';
+import Schedule from './components/schedule'
 
 function App() {
+
+  let schedulesStorage = JSON.parse(localStorage.getItem('schedules'));
+  if (!schedulesStorage) {
+    schedulesStorage = []
+  }
+
+  const [schedules, setSchedules] = useState(schedulesStorage);
+
+  useEffect(() => {
+    if(schedulesStorage) {
+      localStorage.setItem('schedules', JSON.stringify(schedules));
+    } else {
+      localStorage.setItem('schedules', JSON.stringify([]));
+    }
+  },[schedules, schedulesStorage]);
+
+  const createSchedules = schedule => {
+    setSchedules([
+      ...schedules,
+      schedule,
+    ]);
+  }
+
+  const deleteSchedule = id => {
+    const newSchedules = schedules.filter(schedule => schedule.id !== id);
+    setSchedules(newSchedules);
+  }
+
+  const titulo = schedules.length === 0 ? 'No hay Citas' : 'Administra tus citas';
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <h1>Administrador de Pacientes</h1>
+
+      <div className="container">
+        <div className="row">
+          <div className="one-half column">
+            <Form 
+              createSchedules={createSchedules}
+            />
+          </div>
+          <div className="one-half column">
+            <h2>{ titulo }</h2>
+            {
+              schedules.map(schedule => (
+                <Schedule
+                  key={schedule.id}
+                  schedule={schedule}
+                  deleteSchedule={deleteSchedule}
+                />
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </Fragment>
   );
 }
 
